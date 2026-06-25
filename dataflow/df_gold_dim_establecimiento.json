@@ -1,0 +1,152 @@
+{
+	"name": "df_gold_dim_establecimiento",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "srcPlataBjaEstablecimientos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_sup_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "srcPlataSupEstablecimientos"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_gold_dim_establecimiento",
+						"type": "DatasetReference"
+					},
+					"name": "sinkGoldDimEstablecimientoBja"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_gold_dim_establecimiento",
+						"type": "DatasetReference"
+					},
+					"name": "sinkGoldDimEstablecimientoSup"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derFuenteBja"
+				},
+				{
+					"name": "derFuenteSup"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcPlataBjaEstablecimientos",
+				"source(output(",
+				"          establecimiento_id as integer,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcPlataSupEstablecimientos",
+				"srcPlataBjaEstablecimientos derive(fuente = 'BJA') ~> derFuenteBja",
+				"srcPlataSupEstablecimientos derive(fuente = 'SUP') ~> derFuenteSup",
+				"derFuenteBja sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_key as integer,",
+				"          establecimiento_id as integer,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string,",
+				"          fuente as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          establecimiento_id,",
+				"          codigo_snis,",
+				"          nombre,",
+				"          tipo,",
+				"          nivel_atencion,",
+				"          municipio,",
+				"          departamento,",
+				"          red_salud,",
+				"          estado,",
+				"          fuente",
+				"     )) ~> sinkGoldDimEstablecimientoBja",
+				"derFuenteSup sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_key as integer,",
+				"          establecimiento_id as integer,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string,",
+				"          fuente as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          establecimiento_id,",
+				"          codigo_snis,",
+				"          nombre,",
+				"          tipo,",
+				"          nivel_atencion,",
+				"          municipio,",
+				"          departamento,",
+				"          red_salud,",
+				"          estado,",
+				"          fuente",
+				"     )) ~> sinkGoldDimEstablecimientoSup"
+			]
+		}
+	}
+}

@@ -1,0 +1,81 @@
+{
+	"name": "df_gold_dim_persona",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_segip_personas",
+						"type": "DatasetReference"
+					},
+					"name": "srcPlataSegipPersonas"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_gold_dim_persona",
+						"type": "DatasetReference"
+					},
+					"name": "sinkGoldDimPersona"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as date,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as integer,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcPlataSegipPersonas",
+				"srcPlataSegipPersonas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          persona_key as integer,",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as date,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          municipio_residencia as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci,",
+				"          nombres,",
+				"          apellido_paterno,",
+				"          apellido_materno,",
+				"          fecha_nacimiento,",
+				"          genero,",
+				"          estado_civil,",
+				"          municipio_residencia",
+				"     )) ~> sinkGoldDimPersona"
+			]
+		}
+	}
+}

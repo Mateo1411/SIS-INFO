@@ -1,0 +1,63 @@
+{
+	"name": "df_gold_hechos_pagos",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "srcPlataBjaPagos"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_gold_hechos_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkGoldHechosPagos"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as string,",
+				"          fecha_pago as string,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcPlataBjaPagos",
+				"srcPlataBjaPagos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          pago_key as integer,",
+				"          tiempo_key as integer,",
+				"          persona_key as integer,",
+				"          pago_id as integer,",
+				"          concepto_pago as string,",
+				"          monto_bs as decimal(10,2),",
+				"          estado_pago as string,",
+				"          canal_pago as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkGoldHechosPagos"
+			]
+		}
+	}
+}

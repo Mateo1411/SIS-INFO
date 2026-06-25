@@ -1,0 +1,67 @@
+{
+	"name": "df_gold_hechos_entregas",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_sup_entregas",
+						"type": "DatasetReference"
+					},
+					"name": "srcPlataSupEntregas"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_gold_hechos_entregas",
+						"type": "DatasetReference"
+					},
+					"name": "sinkGoldHechosEntregas"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          entrega_id as integer,",
+				"          boleta_id as integer,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as integer,",
+				"          paquete_id as integer,",
+				"          paquete_nombre as string,",
+				"          fecha_entrega as date,",
+				"          lote_produccion as string,",
+				"          peso_paquete_kg as decimal(6,2),",
+				"          fecha_proxima_entrega as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcPlataSupEntregas",
+				"srcPlataSupEntregas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          entrega_key as integer,",
+				"          tiempo_key as integer,",
+				"          persona_key as integer,",
+				"          establecimiento_key as integer,",
+				"          paquete_key as integer,",
+				"          entrega_id as integer,",
+				"          boleta_id as integer,",
+				"          peso_paquete_kg as decimal(6,2),",
+				"          lote_produccion as string,",
+				"          fecha_proxima_entrega as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkGoldHechosEntregas"
+			]
+		}
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"name": "ds_sql_gold_hechos_pagos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "pago_key",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "tiempo_key",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "persona_key",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "pago_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "concepto_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "monto_bs",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "estado_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "canal_pago",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "hechos_pagos"
+		}
+	}
+}

@@ -1,0 +1,67 @@
+{
+	"name": "df_gold_hechos_controles",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "srcPlataBjaControlesPrenatales"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_gold_hechos_controles",
+						"type": "DatasetReference"
+					},
+					"name": "sinkGoldHechosControles"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcPlataBjaControlesPrenatales",
+				"srcPlataBjaControlesPrenatales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_key as integer,",
+				"          tiempo_key as integer,",
+				"          persona_key as integer,",
+				"          establecimiento_key as integer,",
+				"          fuente_programa as string,",
+				"          tipo_control as string,",
+				"          nro_control as integer,",
+				"          semana_gestacion as integer,",
+				"          peso_kg as decimal(6,2),",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkGoldHechosControles"
+			]
+		}
+	}
+}
