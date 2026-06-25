@@ -1,0 +1,376 @@
+{
+	"name": "df_plata_bja",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_bja_inscripciones",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceBjaInscripciones"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_bja_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceBjaControlesPrenatales"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_bja_partos",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceBjaPartos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_bja_controles_pediatricos",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceBjaControlesPediatricos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_bja_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceBjaPagos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_bja_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceBjaEstablecimientos"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_inscripciones",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataBjaInscripciones"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataBjaControlesPrenatales"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_partos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataBjaPartos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_controles_pediatricos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataBjaControlesPediatricos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataBjaPagos"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_bja_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataBjaEstablecimientos"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derBjaInscripciones"
+				},
+				{
+					"name": "derBjaControlesPrenatales"
+				},
+				{
+					"name": "derBjaPartos"
+				},
+				{
+					"name": "derBjaControlesPediatricos"
+				},
+				{
+					"name": "derBjaPagos"
+				},
+				{
+					"name": "derBjaEstablecimientos"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          inscripcion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          fecha_inscripcion as string,",
+				"          semana_gestacion as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceBjaInscripciones",
+				"source(output(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceBjaControlesPrenatales",
+				"source(output(",
+				"          parto_id as string,",
+				"          ci_madre as string,",
+				"          ci_recien_nacido as string,",
+				"          establecimiento_id as string,",
+				"          fecha_parto as string,",
+				"          tipo_parto as string,",
+				"          peso_nacimiento_kg as string,",
+				"          talla_nacimiento_cm as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceBjaPartos",
+				"source(output(",
+				"          control_pediatrico_id as string,",
+				"          ci_nino as string,",
+				"          ci_madre as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          peso_nino_kg as string,",
+				"          talla_nino_cm as string,",
+				"          vacuna_aplicada as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceBjaControlesPediatricos",
+				"source(output(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as string,",
+				"          fecha_pago as string,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceBjaPagos",
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceBjaEstablecimientos",
+				"srcBronceBjaInscripciones derive(inscripcion_id = toInteger(inscripcion_id),",
+				"          ci_beneficiaria = trim(ci_beneficiaria),",
+				"          establecimiento_id = toInteger(establecimiento_id),",
+				"          fecha_inscripcion = toDate(fecha_inscripcion, 'dd/MM/yyyy'),",
+				"          semana_gestacion = toInteger(semana_gestacion),",
+				"          estado = initCap(lower(trim(estado)))) ~> derBjaInscripciones",
+				"srcBronceBjaControlesPrenatales derive(control_prenatal_id = toInteger(control_prenatal_id),",
+				"          ci_beneficiaria = replace(trim(ci_beneficiaria), '-', ''),",
+				"          establecimiento_id = toInteger(establecimiento_id),",
+				"          nro_control = toInteger(nro_control),",
+				"          fecha_control = toDate(fecha_control, 'dd/MM/yyyy'),",
+				"          semana_gestacion = toInteger(semana_gestacion),",
+				"          peso_madre_kg = toDecimal(peso_madre_kg, 6, 2),",
+				"          presion_arterial = iif(isNull(presion_arterial) || trim(presion_arterial) == '', toString(null()), trim(presion_arterial)),",
+				"          resultado = iif(isNull(resultado) || trim(resultado) == '', toString(null()), initCap(lower(trim(resultado))))) ~> derBjaControlesPrenatales",
+				"srcBronceBjaPartos derive(parto_id = toInteger(parto_id),",
+				"          ci_madre = replace(trim(ci_madre), '-', ''),",
+				"          ci_recien_nacido = replace(trim(ci_recien_nacido), '-', ''),",
+				"          establecimiento_id = toInteger(establecimiento_id),",
+				"          fecha_parto = toDate(fecha_parto, 'dd/MM/yyyy'),",
+				"          tipo_parto = iif(isNull(tipo_parto) || trim(tipo_parto) == '', toString(null()), initCap(lower(trim(tipo_parto)))),",
+				"          peso_nacimiento_kg = toDecimal(peso_nacimiento_kg, 6, 2),",
+				"          talla_nacimiento_cm = toDecimal(talla_nacimiento_cm, 6, 2)) ~> derBjaPartos",
+				"srcBronceBjaControlesPediatricos derive(control_pediatrico_id = toInteger(control_pediatrico_id),",
+				"          ci_nino = replace(trim(ci_nino), '-', ''),",
+				"          ci_madre = replace(trim(ci_madre), '-', ''),",
+				"          establecimiento_id = toInteger(establecimiento_id),",
+				"          nro_control = toInteger(nro_control),",
+				"          fecha_control = toDate(fecha_control, 'dd/MM/yyyy'),",
+				"          peso_nino_kg = toDecimal(peso_nino_kg, 6, 2),",
+				"          talla_nino_cm = toDecimal(talla_nino_cm, 6, 2),",
+				"          vacuna_aplicada = iif(isNull(vacuna_aplicada) || trim(vacuna_aplicada) == '', toString(null()), initCap(lower(trim(vacuna_aplicada)))),",
+				"          resultado = iif(isNull(resultado) || trim(resultado) == '', toString(null()), initCap(lower(trim(resultado))))) ~> derBjaControlesPediatricos",
+				"srcBronceBjaPagos derive(pago_id = toInteger(pago_id),",
+				"          ci_beneficiaria = replace(trim(ci_beneficiaria), '-', ''),",
+				"          concepto_pago = initCap(lower(trim(concepto_pago))),",
+				"          monto_bs = toDecimal(monto_bs, 10, 2),",
+				"          fecha_pago = toDate(fecha_pago, 'dd/MM/yyyy'),",
+				"          estado_pago = initCap(lower(trim(estado_pago))),",
+				"          canal_pago = iif(isNull(canal_pago) || trim(canal_pago) == '', toString(null()), initCap(lower(trim(canal_pago)))),",
+				"          nro_comprobante = iif(isNull(nro_comprobante) || trim(nro_comprobante) == '', toString(null()), trim(nro_comprobante))) ~> derBjaPagos",
+				"srcBronceBjaEstablecimientos derive(establecimiento_id = toInteger(establecimiento_id),",
+				"          codigo_snis = upper(trim(codigo_snis)),",
+				"          nombre = initCap(lower(trim(nombre))),",
+				"          tipo = initCap(lower(trim(tipo))),",
+				"          nivel_atencion = initCap(lower(trim(nivel_atencion))),",
+				"          municipio = initCap(lower(trim(municipio))),",
+				"          departamento = initCap(lower(trim(departamento))),",
+				"          red_salud = initCap(lower(trim(red_salud))),",
+				"          estado = initCap(lower(trim(estado)))) ~> derBjaEstablecimientos",
+				"derBjaInscripciones sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          inscripcion_id as integer,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as integer,",
+				"          fecha_inscripcion as date,",
+				"          semana_gestacion as integer,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataBjaInscripciones",
+				"derBjaControlesPrenatales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataBjaControlesPrenatales",
+				"derBjaPartos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          parto_id as string,",
+				"          ci_madre as string,",
+				"          ci_recien_nacido as string,",
+				"          establecimiento_id as string,",
+				"          fecha_parto as string,",
+				"          tipo_parto as string,",
+				"          peso_nacimiento_kg as string,",
+				"          talla_nacimiento_cm as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataBjaPartos",
+				"derBjaControlesPediatricos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_pediatrico_id as string,",
+				"          ci_nino as string,",
+				"          ci_madre as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          peso_nino_kg as string,",
+				"          talla_nino_cm as string,",
+				"          vacuna_aplicada as string,",
+				"          resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataBjaControlesPediatricos",
+				"derBjaPagos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as string,",
+				"          fecha_pago as string,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataBjaPagos",
+				"derBjaEstablecimientos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataBjaEstablecimientos"
+			]
+		}
+	}
+}
