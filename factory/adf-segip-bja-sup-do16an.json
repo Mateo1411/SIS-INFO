@@ -1,0 +1,15 @@
+{
+	"name": "adf-segip-bja-sup-do16an",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "brazilsouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "10ed54a3-7ff3-4bab-b6dd-cb17bf0d781e",
+		"tenantId": "cc28633f-12b8-46cb-bc15-951dae239b4d"
+	}
+}
