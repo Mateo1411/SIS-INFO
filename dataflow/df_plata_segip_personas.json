@@ -1,0 +1,96 @@
+{
+	"name": "df_plata_segip_personas",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronce_segip_personas",
+						"type": "DatasetReference"
+					},
+					"name": "srcBronceSegip"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_plata_segip_personas",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPlataSegip"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derLimpiezaSegip"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as string,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcBronceSegip",
+				"srcBronceSegip derive(ci = trim(ci),",
+				"          nombres = initCap(lower(trim(nombres))),",
+				"          apellido_paterno = initCap(lower(trim(apellido_paterno))),",
+				"          apellido_materno = initCap(lower(trim(apellido_materno))),",
+				"          fecha_nacimiento = toDate(fecha_nacimiento, 'dd/MM/yyyy'),",
+				"          genero = upper(trim(genero)),",
+				"          estado_civil = initCap(lower(trim(estado_civil))),",
+				"          municipio_residencia = initCap(lower(trim(municipio_residencia))),",
+				"          ci_conyuge = iif(isNull(ci_conyuge) || trim(ci_conyuge) == '', toString(null()), trim(ci_conyuge)),",
+				"          numero_hijos = toInteger(null()),",
+				"          ci_padre = iif(isNull(ci_padre) || trim(ci_padre) == '', toString(null()), trim(ci_padre)),",
+				"          ci_madre = iif(isNull(ci_madre) || trim(ci_madre) == '', toString(null()), trim(ci_madre)),",
+				"          profesion = iif(isNull(profesion) || trim(profesion) == '', toString(null()), initCap(lower(trim(profesion)))),",
+				"          nivel_estudios = iif(isNull(nivel_estudios) || trim(nivel_estudios) == '', toString(null()), initCap(lower(trim(nivel_estudios)))),",
+				"          fecha_emision = toDate(null())) ~> derLimpiezaSegip",
+				"derLimpiezaSegip sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as date,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as integer,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPlataSegip"
+			]
+		}
+	}
+}
