@@ -21,7 +21,11 @@
 					"name": "sinkGoldHechosPagos"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          pago_id as string,",
@@ -37,7 +41,14 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> srcPlataBjaPagos",
-				"srcPlataBjaPagos sink(allowSchemaDrift: true,",
+				"srcPlataBjaPagos aggregate(groupBy(pago_id),",
+				"     ci_beneficiaria = first(ci_beneficiaria),",
+				"          fecha_pago = first(fecha_pago),",
+				"          concepto_pago = first(concepto_pago),",
+				"          monto_bs = first(monto_bs),",
+				"          estado_pago = first(estado_pago),",
+				"          canal_pago = first(canal_pago)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          pago_key as integer,",

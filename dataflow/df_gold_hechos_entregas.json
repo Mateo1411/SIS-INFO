@@ -21,7 +21,11 @@
 					"name": "sinkGoldHechosEntregas"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          entrega_id as integer,",
@@ -39,7 +43,14 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> srcPlataSupEntregas",
-				"srcPlataSupEntregas sink(allowSchemaDrift: true,",
+				"srcPlataSupEntregas aggregate(groupBy(entrega_id),",
+				"     ci_beneficiaria = first(ci_beneficiaria),",
+				"          establecimiento_id = first(establecimiento_id),",
+				"          paquete_id = first(paquete_id),",
+				"          lote_produccion = first(lote_produccion),",
+				"          peso_paquete_kg = first(peso_paquete_kg),",
+				"          fecha_entrega = first(fecha_entrega)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          entrega_key as integer,",

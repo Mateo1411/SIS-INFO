@@ -21,7 +21,11 @@
 					"name": "sinkGoldDimPersona"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          ci as string,",
@@ -44,7 +48,14 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> srcPlataSegipPersonas",
-				"srcPlataSegipPersonas sink(allowSchemaDrift: true,",
+				"srcPlataSegipPersonas aggregate(groupBy(ci),",
+				"     nombres = first(nombres),",
+				"          apellido_paterno = first(apellido_paterno),",
+				"          apellido_materno = first(apellido_materno),",
+				"          fecha_nacimiento = first(fecha_nacimiento),",
+				"          genero = first(genero),",
+				"          estado_civil = first(estado_civil)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          persona_key as integer,",
@@ -61,7 +72,7 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     truncate:true,",
+				"     recreate:true,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
@@ -73,8 +84,7 @@
 				"          apellido_materno,",
 				"          fecha_nacimiento,",
 				"          genero,",
-				"          estado_civil,",
-				"          municipio_residencia",
+				"          estado_civil",
 				"     )) ~> sinkGoldDimPersona"
 			]
 		}

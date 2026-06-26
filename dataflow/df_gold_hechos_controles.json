@@ -21,7 +21,11 @@
 					"name": "sinkGoldHechosControles"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          control_prenatal_id as string,",
@@ -38,7 +42,15 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> srcPlataBjaControlesPrenatales",
-				"srcPlataBjaControlesPrenatales sink(allowSchemaDrift: true,",
+				"srcPlataBjaControlesPrenatales aggregate(groupBy(control_prenatal_id),",
+				"     ci_beneficiaria = first(ci_beneficiaria),",
+				"          establecimiento_id = first(establecimiento_id),",
+				"          fecha_control = first(fecha_control),",
+				"          nro_control = first(nro_control),",
+				"          semana_gestacion = first(semana_gestacion),",
+				"          peso_madre_kg = first(peso_madre_kg),",
+				"          presion_arterial = first(presion_arterial)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          control_key as integer,",

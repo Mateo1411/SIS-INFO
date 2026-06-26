@@ -21,7 +21,11 @@
 					"name": "sinkGoldDimPaquete"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          paquete_id as integer,",
@@ -34,7 +38,12 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> srcPlataSupCatalogoPaquetes",
-				"srcPlataSupCatalogoPaquetes sink(allowSchemaDrift: true,",
+				"srcPlataSupCatalogoPaquetes aggregate(groupBy(paquete_id),",
+				"     nombre = first(nombre),",
+				"          contenido = first(contenido),",
+				"          peso_estandar_kg = first(peso_estandar_kg),",
+				"          costo_estimado_bs = first(costo_estimado_bs)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          paquete_key as integer,",
